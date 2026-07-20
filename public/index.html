@@ -469,6 +469,172 @@
       border-color: var(--ink);
     }
 
+    /* ============ SUBVENTIONS ============ */
+    .subv-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    .subv-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      text-align: center;
+      box-shadow: var(--shadow-1);
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+    }
+    .subv-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 20px rgba(11,37,69,0.06);
+    }
+    .subv-total {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+    .subv-total h3, .subv-total .subv-label { color: #fff; }
+    .subv-total p { color: rgba(255,255,255,0.75); }
+    .subv-total .subv-source { color: rgba(255,255,255,0.45); }
+    .subv-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 10px;
+      padding: 0.3rem 0.9rem;
+      margin-bottom: 0.6rem;
+    }
+    .subv-total .subv-badge {
+      background: rgba(31,122,140,0.25);
+      color: #7ec5d0;
+    }
+    .subv-badge-big { font-size: 1.85rem; }
+    .subv-label {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-3);
+      margin-bottom: 0.5rem;
+    }
+    .subv-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+    .subv-card p {
+      font-size: 0.9rem;
+      color: var(--ink-3);
+      margin-bottom: 0.75rem;
+    }
+    .subv-source {
+      font-size: 0.76rem;
+      color: var(--ink-3);
+      font-style: italic;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 0.5rem;
+    }
+    .subv-process {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .subv-process h3 {
+      font-size: 1.15rem;
+      margin-bottom: 1.5rem;
+    }
+    .subv-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .subv-step { padding-top: 0.25rem; }
+    .subv-step-num {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+    .subv-step strong {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+    .subv-step p {
+      font-size: 0.88rem;
+      color: var(--ink-3);
+      margin: 0;
+    }
+    .subv-step code {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.82rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
+    }
+    .subv-example {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    .subv-example-head {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .subv-example-head h3 { font-size: 1.1rem; margin: 0; }
+    .subv-calc { max-width: 520px; margin: 0 auto; }
+    .subv-line {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px dashed var(--line-soft);
+      font-size: 0.93rem;
+      color: var(--ink-2);
+    }
+    .subv-line-subtotal {
+      border-bottom: 1px solid var(--line);
+      font-weight: 600;
+      color: var(--ink);
+      margin-top: 0.25rem;
+    }
+    .subv-line-credit { color: var(--ok); }
+    .subv-line-total {
+      border-top: 2px solid var(--ink);
+      border-bottom: none;
+      padding-top: 0.8rem;
+      margin-top: 0.5rem;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--ink);
+    }
+    .subv-amt {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-weight: 500;
+    }
+    .subv-amt-pos { color: var(--ok); font-weight: 600; }
+    .subv-amt-final { font-size: 1.25rem; color: var(--ink); font-weight: 700; }
+    .subv-disclaimer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--ink-3);
+      font-style: italic;
+      margin-top: 1.5rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (max-width: 880px) {
+      .subv-grid, .subv-steps { grid-template-columns: 1fr; }
+    }
+
     /* ============ FAQ ============ */
     .faq-list { max-width: 760px; margin: 0 auto; }
     .faq-item {
@@ -733,6 +899,7 @@
         <li><a href="#agents">Agents</a></li>
         <li><a href="#hebergement">Loi 25</a></li>
         <li><a href="#tarifs">Tarifs</a></li>
+        <li><a href="#subventions">Subventions</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
       <a href="#contact" class="nav-cta">Démo</a>
@@ -1107,6 +1274,102 @@
           </ul>
           <div class="price-cta">Nous contacter</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SUBVENTIONS ====== -->
+  <section id="subventions" class="alt-bg">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Subventions &amp; crédits d'impôt</span>
+        <h2>Vos clients récupèrent jusqu'à 65% de nos frais.</h2>
+        <p>Déployer Comptaria chez un client, c'est un projet de transformation numérique qui qualifie pour les crédits d'impôt SR&amp;ED (fédéral + Québec). L'agent IA fait le travail ; le fisc rembourse une bonne partie de la facture.</p>
+      </div>
+
+      <div class="subv-grid">
+        <div class="subv-card">
+          <div class="subv-badge">35%</div>
+          <div class="subv-label">SR&amp;ED Fédéral</div>
+          <h3>Crédit d'impôt remboursable</h3>
+          <p>Pour les CCPC (sociétés canadiennes contrôlées par des Canadiens) sous le plafond d'actif de 50M$. Versé en cash, pas en déduction fiscale.</p>
+          <div class="subv-source">Loi de l'impôt sur le revenu, art. 127 · Taux CCPC bonifié</div>
+        </div>
+
+        <div class="subv-card">
+          <div class="subv-badge">14-30%</div>
+          <div class="subv-label">Crédit R&amp;D Québec</div>
+          <h3>Crédit provincial additionnel</h3>
+          <p>Le Québec offre son propre crédit R&amp;D qui se cumule au fédéral. Les deux s'appliquent sur le même pool de dépenses admissibles.</p>
+          <div class="subv-source">Revenu Québec · Loi sur les impôts (L.R.Q., c. I-3)</div>
+        </div>
+
+        <div class="subv-card subv-total">
+          <div class="subv-badge subv-badge-big">~65%</div>
+          <div class="subv-label">Récupération totale</div>
+          <h3>Sur les dépenses admissibles</h3>
+          <p>Salaires R&amp;D, frais généraux (proxy 55%), infra GPU, sous-traitance — chaque dollar dépensé sur le projet Comptaria peut être réclamé.</p>
+          <div class="subv-source">Combinaison fédérale + provinciale optimisée</div>
+        </div>
+      </div>
+
+      <div class="subv-process">
+        <h3>Comment ça marche — en 3 étapes</h3>
+        <div class="subv-steps">
+          <div class="subv-step">
+            <span class="subv-step-num">01</span>
+            <strong>On documente pendant le pilote</strong>
+            <p>Chaque décision d'agent est tracée automatiquement par <code>compta_harness</code>. Feuilles de temps R&amp;D, hypothèses techniques, expérimentations — capturées en continu, prêtes pour le formulaire T661.</p>
+          </div>
+          <div class="subv-step">
+            <span class="subv-step-num">02</span>
+            <strong>On identifie les projets admissibles</strong>
+            <p>L'orchestration multi-agents, l'apprentissage du plan comptable cabinet, la détection d'anomalies — tout ça qualifie comme « développement expérimental » (ITA art. 248(1)c). Pas du routine dev.</p>
+          </div>
+          <div class="subv-step">
+            <span class="subv-step-num">03</span>
+            <strong>On produit la documentation</strong>
+            <p>On fournit le squelette technique T661, le registre des activités R&amp;D, et les preuves d'expérimentation. Votre fiscaliste valide et soumet. L'ARC rembourse.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subv-example">
+        <div class="subv-example-head">
+          <span class="patent-tag">Exemple</span>
+          <h3>Cabinet de 10 CPA · pilote Comptaria</h3>
+        </div>
+        <div class="subv-calc">
+          <div class="subv-line">
+            <span>Frais annuels Comptaria (plan Cabinet)</span>
+            <span class="subv-amt">54 000 $</span>
+          </div>
+          <div class="subv-line">
+            <span>Setup initial + intégrations</span>
+            <span class="subv-amt">18 000 $</span>
+          </div>
+          <div class="subv-line">
+            <span>Heures R&amp;D admissibles (pilote, tuning, POC)</span>
+            <span class="subv-amt">~40 000 $</span>
+          </div>
+          <div class="subv-line subv-line-subtotal">
+            <span>Dépenses SR&amp;ED admissibles (avec overhead 55%)</span>
+            <span class="subv-amt">~112 000 $</span>
+          </div>
+          <div class="subv-line subv-line-credit">
+            <span>Crédit fédéral 35% (remboursable)</span>
+            <span class="subv-amt subv-amt-pos">−39 200 $</span>
+          </div>
+          <div class="subv-line subv-line-credit">
+            <span>Crédit Québec ~20%</span>
+            <span class="subv-amt subv-amt-pos">−22 400 $</span>
+          </div>
+          <div class="subv-line subv-line-total">
+            <span>Coût net après récupération</span>
+            <span class="subv-amt subv-amt-final">~50 400 $</span>
+          </div>
+        </div>
+        <p class="subv-disclaimer">Estimation indicative basée sur les taux SR&amp;ED 2026 (CRA + Revenu Québec). À valider avec votre fiscaliste. Conditions : statut CCPC, activités R&amp;D documentées, formulaire T661 soumis.</p>
       </div>
     </div>
   </section>
