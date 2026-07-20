@@ -1,6 +1,6 @@
-# comta_lm — site one-pager
+# Comptaria — site one-pager
 
-Site web statique de comta_lm. Déployé sur Vercel via push GitHub.
+Site web statique de Comptaria. Déployé sur Vercel via push GitHub.
 
 ## Stack
 - HTML/CSS/JS vanilla (1 seul fichier `index.html`)
@@ -16,7 +16,7 @@ git push origin main
 
 # 2. Vercel déploie automatiquement (~30s)
 # 3. Vérifier le live URL
-curl -s https://comta-lm-site.vercel.app/ | head -5
+curl -s https://comptaria.ca/ | head -5
 ```
 
 ## Sections (ordre)
@@ -39,6 +39,6 @@ curl -s https://comta-lm-site.vercel.app/ | head -5
 - "Plans envisagés" / "indicatif" (jamais "à partir de X" sans astérisque)
 
 ## Modifications fréquentes
-- Changer le placeholder `comta_lm` quand le nom officiel est choisi
-- Mettre à jour `hello@comta-lm.ca` quand le domaine est possédé
+- Changer le placeholder `Comptaria` quand le nom officiel est choisi
+- Mettre à jour `hello@comptaria.ca` quand le domaine est possédé
 - Remplacer le SVG inline du favicon si logo défini
