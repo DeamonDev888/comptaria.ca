@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>comta_lm — Orchestration d'agents IA pour cabinets et PME · Québec</title>
+  <meta name="description" content="Plateforme d'orchestration d'agents IA pour cabinets comptables et PME au Québec. GLM 5.2 hébergé à Montréal, conforme à la Loi 25. L'agent fait 80% du travail, le CPA signe le 20% qui compte." />
+  <meta name="theme-color" content="#0b2545" />
+  <meta property="og:title" content="comta_lm — Agents IA comptables hébergés au Québec" />
+  <meta property="og:description" content="Orchestration d'agents IA open-source (GLM 5.2) auto-hébergée à Montréal. L'agent fait 80% du travail, le CPA signe le 20% qui compte." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="fr_CA" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b2545'/%3E%3Ctext x='32' y='42' font-family='ui-monospace,monospace' font-size='32' font-weight='700' fill='%23ffffff' text-anchor='middle'%3Ecl%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-soft: #f7f9fc;
+      --bg-card: #ffffff;
+      --ink: #0b2545;
+      --ink-2: #1f3a5f;
+      --ink-3: #5a6a82;
+      --line: #e3e9f2;
+      --line-soft: #eef2f8;
+      --accent: #1f7a8c;
+      --accent-2: #bf4342;
+      --accent-soft: #e6f2f4;
+      --warn: #d4a017;
+      --ok: #2e8b57;
+      --radius: 10px;
+      --shadow-1: 0 1px 2px rgba(11,37,69,0.04), 0 1px 3px rgba(11,37,69,0.06);
+      --shadow-2: 0 4px 12px rgba(11,37,69,0.06), 0 2px 4px rgba(11,37,69,0.04);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+      font-weight: 400;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3, h4 {
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    h1 { font-size: clamp(2rem, 5vw, 3.25rem); margin: 0 0 1rem; }
+    h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 0.75rem; }
+    h3 { font-size: 1.15rem; margin: 0 0 0.5rem; }
+
+    p { margin: 0 0 1rem; color: var(--ink-2); }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 120ms ease;
+    }
+    a:hover { border-color: var(--accent); }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ============ NAV ============ */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 600;
+      color: var(--ink);
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .logo-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    .nav-links {
+      display: flex; gap: 1.75rem;
+      list-style: none; padding: 0; margin: 0;
+    }
+    .nav-links a {
+      color: var(--ink-2);
+      font-size: 0.92rem;
+      font-weight: 500;
+      border: none;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      background: var(--ink);
+      color: #fff !important;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: none !important;
+    }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ============ HERO ============ */
+    .hero {
+      padding: 4rem 0 5rem;
+      background:
+        radial-gradient(circle at 12% 8%, var(--accent-soft) 0%, transparent 32%),
+        radial-gradient(circle at 88% 92%, #fdf0ee 0%, transparent 36%),
+        var(--bg);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    .hero h1 strong {
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .hero h1 .ink-soft { color: var(--ink-3); font-weight: 500; }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--ink-3);
+      max-width: 520px;
+      margin: 1.25rem 0 1.75rem;
+    }
+    .hero-ctas {
+      display: flex; gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border: 1px solid transparent;
+      transition: all 120ms ease;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--ink); color: #fff; }
+    .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+    .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+    .btn-ghost:hover { border-color: var(--ink); }
+
+    .trust-strip {
+      display: flex; flex-wrap: wrap; gap: 1.25rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line-soft);
+      font-size: 0.85rem;
+      color: var(--ink-3);
+    }
+    .trust-strip span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .trust-strip strong { color: var(--ink); font-weight: 600; }
+
+    /* ============ COMPTA VISUAL ============ */
+    .compta-visual {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow-2);
+      overflow: hidden;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.82rem;
+    }
+    .compta-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--bg-soft);
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-3);
+      font-size: 0.75rem;
+    }
+    .compta-head .file { color: var(--ink); font-weight: 500; }
+    .compta-head .status {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      color: var(--ok);
+    }
+    .compta-head .status::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--ok);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    .compta-body { padding: 1rem 1.25rem; }
+    .ledger-row {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 0.6fr 1fr;
+      gap: 0.75rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px dashed var(--line-soft);
+      align-items: baseline;
+    }
+    .ledger-row:last-child { border-bottom: none; }
+    .ledger-row.head {
+      color: var(--ink-3);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+    .ledger-row .date { color: var(--ink-3); }
+    .ledger-row .amt { text-align: right; font-weight: 500; color: var(--ink); }
+    .ledger-row .tag {
+      display: inline-block;
+      padding: 0.05rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-align: center;
+    }
+    .tag-auto {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .tag-review {
+      background: #fdf6e3;
+      color: var(--warn);
+    }
+    .tag-done {
+      background: #e8f5ee;
+      color: var(--ok);
+    }
+    .ledger-tot {
+      display: flex; justify-content: space-between;
+      padding: 0.75rem 0 0;
+      margin-top: 0.5rem;
+      border-top: 1px solid var(--line);
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .ledger-tot .amt-pos { color: var(--ok); }
+    .ledger-tot .amt-neg { color: var(--accent-2); }
+
+    /* ============ SECTIONS ============ */
+    section { padding: 4rem 0; }
+    .section-head { max-width: 640px; margin-bottom: 2.5rem; }
+    .section-head .eyebrow { margin-bottom: 0.6rem; }
+    .section-head p { color: var(--ink-3); }
+
+    .alt-bg { background: var(--bg-soft); }
+
+    /* ============ CARDS ============ */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-1);
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 20px rgba(11,37,69,0.06);
+      transform: translateY(-2px);
+    }
+    .card h3 { color: var(--ink); }
+    .card p { margin-bottom: 0; color: var(--ink-3); font-size: 0.95rem; }
+    .card .icon {
+      width: 36px; height: 36px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.85rem;
+    }
+
+    /* ============ AGENTS LIST ============ */
+    .agents-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
+    }
+    .agent {
+      display: flex; align-items: flex-start; gap: 0.65rem;
+      padding: 0.85rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 0.93rem;
+    }
+    .agent-bullet {
+      width: 22px; height: 22px;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .agent-meta { display: block; font-size: 0.78rem; color: var(--ink-3); margin-top: 0.15rem; }
+
+    /* ============ PILLARS ============ */
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+    .pillar {
+      text-align: left;
+      padding: 1.5rem;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border-top: 3px solid var(--accent);
+    }
+    .pillar.alt { border-top-color: var(--ink); }
+    .pillar.alt2 { border-top-color: var(--accent-2); }
+    .pillar h3 { font-size: 1rem; }
+    .pillar .pillar-num {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      color: var(--ink-3);
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .pillar p { font-size: 0.92rem; }
+
+    /* ============ COMPLIANCE BAR ============ */
+    .compliance {
+      background: var(--ink);
+      color: #fff;
+      padding: 3rem 0;
+    }
+    .compliance .container { color: #fff; }
+    .compliance h2 { color: #fff; }
+    .compliance p { color: rgba(255,255,255,0.78); }
+    .compliance-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .compliance-item {
+      padding: 1.25rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+    }
+    .compliance-item .key {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      color: var(--accent);
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .compliance-item h3 { color: #fff; font-size: 0.98rem; margin-bottom: 0.35rem; }
+    .compliance-item p { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 0; }
+
+    /* ============ PRICING ============ */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+    .price-card {
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.75rem;
+      display: flex; flex-direction: column;
+    }
+    .price-card.featured {
+      border-color: var(--ink);
+      box-shadow: 0 8px 24px rgba(11,37,69,0.1);
+      position: relative;
+    }
+    .price-card.featured::before {
+      content: 'Le plus adopté';
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff;
+      padding: 0.2rem 0.7rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .price-tier { font-family: 'JetBrains Mono', ui-monospace, monospace; color: var(--ink-3); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .price-amt { font-size: 2.5rem; font-weight: 700; color: var(--ink); margin: 0.4rem 0 0.2rem; }
+    .price-amt .per { font-size: 0.95rem; font-weight: 400; color: var(--ink-3); }
+    .price-sub { color: var(--ink-3); font-size: 0.9rem; margin-bottom: 1.25rem; }
+    .price-feats { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+    .price-feats li {
+      padding: 0.45rem 0;
+      font-size: 0.92rem;
+      color: var(--ink-2);
+      border-bottom: 1px dashed var(--line-soft);
+      display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .price-feats li::before {
+      content: '✓';
+      color: var(--ok);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .price-feats li:last-child { border-bottom: none; }
+    .price-cta {
+      margin-top: auto;
+      text-align: center;
+      padding: 0.7rem;
+      border-radius: 6px;
+      background: var(--bg-soft);
+      color: var(--ink);
+      font-weight: 500;
+      border: 1px solid var(--line);
+    }
+    .price-card.featured .price-cta {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    /* ============ FAQ ============ */
+    .faq-list { max-width: 760px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid var(--line);
+      padding: 1.25rem 0;
+    }
+    .faq-q {
+      display: flex; justify-content: space-between; align-items: center;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+      list-style: none;
+    }
+    .faq-q::-webkit-details-marker { display: none; }
+    .faq-q::after {
+      content: '+';
+      font-size: 1.4rem;
+      color: var(--ink-3);
+      font-weight: 300;
+      transition: transform 160ms ease;
+    }
+    details[open] .faq-q::after { transform: rotate(45deg); }
+    .faq-a { margin-top: 0.75rem; color: var(--ink-3); font-size: 0.95rem; }
+
+    /* ============ CTA ============ */
+    .cta-box {
+      background: var(--ink);
+      color: #fff;
+      border-radius: 14px;
+      padding: 3rem;
+      text-align: center;
+    }
+    .cta-box h2 { color: #fff; }
+    .cta-box p { color: rgba(255,255,255,0.78); max-width: 520px; margin: 1rem auto 1.75rem; }
+    .cta-box .btn-primary {
+      background: #fff;
+      color: var(--ink);
+    }
+    .cta-box .btn-primary:hover { background: var(--accent); color: #fff; }
+    .cta-box .btn-ghost {
+      background: transparent;
+      color: #fff;
+      border-color: rgba(255,255,255,0.3);
+    }
+    .cta-box .btn-ghost:hover { border-color: #fff; }
+
+    /* ============ FOOTER ============ */
+    footer {
+      background: var(--bg-soft);
+      border-top: 1px solid var(--line);
+      padding: 2.5rem 0 2rem;
+      font-size: 0.9rem;
+      color: var(--ink-3);
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .foot-col h4 {
+      color: var(--ink);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.85rem;
+    }
+    .foot-col ul { list-style: none; padding: 0; margin: 0; }
+    .foot-col li { padding: 0.25rem 0; }
+    .foot-col a { color: var(--ink-3); border: none; }
+    .foot-col a:hover { color: var(--ink); }
+    .foot-brand p { font-size: 0.85rem; color: var(--ink-3); margin-top: 0.75rem; max-width: 280px; }
+    .foot-bottom {
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+      font-size: 0.82rem;
+    }
+
+    /* ============ VALUES BAR ============ */
+    .values-bar {
+      background: var(--bg-soft);
+      border-bottom: 1px solid var(--line);
+      padding: 1.5rem 0;
+    }
+    .values-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .value-item {
+      display: flex; align-items: center; gap: 0.85rem;
+    }
+    .value-icon {
+      font-size: 1.4rem;
+      width: 40px; height: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .value-item div { display: flex; flex-direction: column; }
+    .value-item strong {
+      color: var(--ink);
+      font-size: 0.93rem;
+      font-weight: 600;
+    }
+    .value-item span:not(.value-icon) {
+      color: var(--ink-3);
+      font-size: 0.82rem;
+      margin-top: 0.05rem;
+    }
+    @media (max-width: 720px) {
+      .values-strip {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    /* ============ COMPTIA_HARNESS ============ */
+    .harness-wrap {
+      background: linear-gradient(135deg, var(--ink) 0%, #1a2f4e 100%);
+      color: #fff;
+      border-radius: 16px;
+      padding: 2.75rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .harness-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(31,122,140,0.18) 0%, transparent 45%),
+        radial-gradient(circle at 90% 100%, rgba(191,67,66,0.10) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .harness-meta {
+      display: flex; gap: 0.6rem;
+      margin-bottom: 1.25rem;
+      position: relative; z-index: 1;
+    }
+    .patent-tag {
+      display: inline-flex; align-items: center;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.74rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.65rem;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .patent-tag.soft {
+      background: rgba(31,122,140,0.18);
+      color: #7ec5d0;
+      border-color: rgba(31,122,140,0.4);
+    }
+    .harness-wrap h2 {
+      color: #fff;
+      position: relative; z-index: 1;
+      margin-bottom: 0.85rem;
+    }
+    .harness-lede {
+      color: rgba(255,255,255,0.82);
+      max-width: 720px;
+      font-size: 1.05rem;
+      position: relative; z-index: 1;
+      margin-bottom: 2rem;
+    }
+    .harness-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      position: relative; z-index: 1;
+    }
+    .harness-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .harness-num {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      color: var(--accent);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+    .harness-card h3 {
+      color: #fff;
+      font-size: 0.98rem;
+      margin-bottom: 0.45rem;
+    }
+    .harness-card p {
+      color: rgba(255,255,255,0.72);
+      font-size: 0.88rem;
+      margin: 0;
+    }
+    .harness-foot {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: flex-start; gap: 1.5rem;
+      position: relative; z-index: 1;
+    }
+    .harness-claim {
+      font-weight: 600;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      padding-top: 0.15rem;
+    }
+    .harness-foot-text {
+      color: rgba(255,255,255,0.82);
+      font-size: 0.93rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 880px) {
+      .harness-grid { grid-template-columns: repeat(2, 1fr); }
+      .harness-foot { flex-direction: column; gap: 0.5rem; }
+    }
+    @media (max-width: 540px) {
+      .harness-grid { grid-template-columns: 1fr; }
+      .harness-wrap { padding: 2rem 1.5rem; }
+    }
+
+    /* ============ MOBILE ============ */
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .grid-3, .pricing-grid, .compliance-grid { grid-template-columns: 1fr; }
+      .grid-2, .agents-list, .pillar-grid { grid-template-columns: 1fr; }
+      .foot-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      section { padding: 3rem 0; }
+      .cta-box { padding: 2rem 1.5rem; }
+    }
+
+    @media (max-width: 540px) {
+      .foot-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== NAV ====== -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo" style="border:none;">
+        <span class="logo-dot"></span>
+        comta_lm
+      </a>
+      <ul class="nav-links">
+        <li><a href="#produit">Produit</a></li>
+        <li><a href="#compta_harness">Harnais</a></li>
+        <li><a href="#agents">Agents</a></li>
+        <li><a href="#hebergement">Loi 25</a></li>
+        <li><a href="#tarifs">Tarifs</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a href="#contact" class="nav-cta">Démo</a>
+    </div>
+  </nav>
+
+  <!-- ====== HERO ====== -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">Agents IA comptables · 100% Montréal</span>
+          <h1>
+            <strong>L'agent fait 80% du travail.</strong><br>
+            <span class="ink-soft">Le CPA signe le 20% qui compte.</span>
+          </h1>
+          <p class="hero-sub">
+            comta_lm orchestre des agents IA open-source (<strong>GLM 5.2</strong>) qui prennent la tenue de livres, la conciliation et les écritures récurrentes — pendant que vos CPA gardent le contrôle de la décision finale. La signature reste humaine ; tout le reste est automatisable.
+          </p>
+          <div class="hero-ctas">
+            <a href="#contact" class="btn btn-primary">Réserver une démo</a>
+            <a href="#produit" class="btn btn-ghost">Voir le produit</a>
+          </div>
+          <div class="trust-strip">
+            <span><strong>100% Montréal</strong> · Auto-hébergé</span>
+            <span><strong>Agents persistants</strong> · Survit aux restarts</span>
+            <span><strong>Zero fallback</strong> · Pas d'API US</span>
+          </div>
+        </div>
+
+        <!-- Visual -->
+        <div class="compta-visual" aria-hidden="true">
+          <div class="compta-head">
+            <span class="file">grand-livre · juillet 2026</span>
+            <span class="status">agent actif</span>
+          </div>
+          <div class="compta-body">
+            <div class="ledger-row head">
+              <span>Date</span>
+              <span>Description</span>
+              <span>État</span>
+              <span style="text-align:right;">Montant</span>
+            </div>
+            <div class="ledger-row">
+              <span class="date">2026-07-03</span>
+              <span>Bell Canada · internet HQ</span>
+              <span><span class="tag tag-done">Validé CPA</span></span>
+              <span class="amt">489,22</span>
+            </div>
+            <div class="ledger-row">
+              <span class="date">2026-07-09</span>
+              <span>Dollarama · fournitures</span>
+              <span><span class="tag tag-auto">Auto · cat.</span></span>
+              <span class="amt">127,40</span>
+            </div>
+            <div class="ledger-row">
+              <span class="date">2026-07-12</span>
+              <span>Banque Nationale · frais</span>
+              <span><span class="tag tag-review">Revue humaine</span></span>
+              <span class="amt">42,00</span>
+            </div>
+            <div class="ledger-row">
+              <span class="date">2026-07-15</span>
+              <span>Client 0471 · paiement</span>
+              <span><span class="tag tag-auto">Auto · apparié</span></span>
+              <span class="amt">12 850,00</span>
+            </div>
+            <div class="ledger-row">
+              <span class="date">2026-07-18</span>
+              <span>Hydro-Québec · usine</span>
+              <span><span class="tag tag-auto">Auto · cat.</span></span>
+              <span class="amt">3 240,55</span>
+            </div>
+            <div class="ledger-tot">
+              <span>Solde mensuel</span>
+              <span><span class="amt-neg">−16 749,17</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== VALEURS — Bandeau ====== -->
+  <section class="values-bar">
+    <div class="container">
+      <div class="values-strip">
+        <div class="value-item">
+          <span class="value-icon">⚖️</span>
+          <div>
+            <strong>Souveraineté numérique</strong>
+            <span>100% Québec · Cloud Act éliminé</span>
+          </div>
+        </div>
+        <div class="value-item">
+          <span class="value-icon">🔍</span>
+          <div>
+            <strong>Transparence</strong>
+            <span>Chaque décision est tracée</span>
+          </div>
+        </div>
+        <div class="value-item">
+          <span class="value-icon">🛡️</span>
+          <div>
+            <strong>Sécurité</strong>
+            <span>AES-256 · TLS 1.3 · zéro dépendance US</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PROBLEM ====== -->
+  <section id="produit">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Le problème</span>
+        <h2>Vous payez des CPA pour coller des factures.</h2>
+        <p>La pénurie de main-d'œuvre qualifiée coûte cher aux cabinets et aux PME. Vos professionnels passent 60% de leur temps sur des tâches répétitives qui ne demandent aucun jugement.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <span class="icon">1</span>
+          <h3>Extraction & saisie</h3>
+          <p>Lecture OCR des factures, catégorisation au plan comptable QC, appariement bancaire. Tâches qui ne demandent pas le titre CPA.</p>
+        </div>
+        <div class="card">
+          <span class="icon">2</span>
+          <h3>Réconciliation</h3>
+          <p>Rapprocher 5 flux (banque, cartes, fournisseur, paie, REQ) sur des centaines d'écritures par mois. Détection d'anomalies, en double.</p>
+        </div>
+        <div class="card">
+          <span class="icon">3</span>
+          <h3>Écritures récurrentes</h3>
+          <p>TPS/TVQ, DAS, retenues, amortissements, régularisations. Structures parfaitement répétables que vos CPA connaissent par cœur.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== COMPTIA_HARNESS — Tech brevetable ====== -->
+  <section id="compta_harness">
+    <div class="container">
+      <div class="harness-wrap">
+        <div class="harness-meta">
+          <span class="patent-tag">⚖️ Patent pending · Q3 2026</span>
+          <span class="patent-tag soft">Prochaine étape IP</span>
+        </div>
+        <h2>compta_harness : le moteur sous le capot.</h2>
+        <p class="harness-lede">
+          comta_lm tourne sur <strong>compta_harness</strong>, un harnais d'orchestration propriétaire conçu spécifiquement pour la comptabilité. C'est notre actif brevetable — pas un wrapper générique réutilisé pour un autre domaine.
+        </p>
+
+        <div class="harness-grid">
+          <div class="harness-card">
+            <div class="harness-num">01</div>
+            <h3>Purgé du non-essentiel</h3>
+            <p>Code source délesté de tout ce qui ne sert pas la comptabilité. Surface d'attaque minimale, surface de raisonnement maximale. Plus rapide, plus auditable.</p>
+          </div>
+          <div class="harness-card">
+            <div class="harness-num">02</div>
+            <h3>Boosté pour la compta</h3>
+            <p>Plan comptable QC, conventions CCQ, schémas TPS/TVQ, FS format MFQ. Natif, pas un add-on greffé en surface.</p>
+          </div>
+          <div class="harness-card">
+            <div class="harness-num">03</div>
+            <h3>Multi-agents autonomes</h3>
+            <p>Plusieurs agents spécialisés (ingestion, conciliation, FS) communiquent entre eux via le harnais. Ils négocient, se valident, escaladent. Pas une file de prompts enchaînés.</p>
+          </div>
+          <div class="harness-card">
+            <div class="harness-num">04</div>
+            <h3>Persistant &amp; auditable</h3>
+            <p>Survit aux redémarrages. Conserve la mémoire du dossier, du cabinet, des conventions historiques. Chaque décision reste tracée pour l'audit Loi 25.</p>
+          </div>
+        </div>
+
+        <div class="harness-foot">
+          <span class="harness-claim">Pourquoi un harnais propriétaire ?</span>
+          <span class="harness-foot-text">
+            Les harnais généralistes donnent 60-70% du résultat avec 100% du code. <strong>compta_harness</strong> livre 95% du résultat en n'embarquant que ce qui sert la compta québécoise. Plus rapide, plus léger, plus défendable.
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SOLUTION (Agents) ====== -->
+  <section id="agents" class="alt-bg">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Notre solution</span>
+        <h2>Un orchestrateur qui copie la structure de votre cabinet.</h2>
+        <p>comta_lm remplace le copier-coller, pas le jugement. Chaque agent tourne en continu, survit aux redémarrages, garde sa mémoire — exactement comme un opérateur humain, mais sans fatigue ni oubli. Le CPA signe, mais ne s'épuise plus.</p>
+      </div>
+
+      <div class="agents-list">
+        <div class="agent">
+          <span class="agent-bullet">A</span>
+          <div>
+            <strong>Ingestion</strong>
+            <span class="agent-meta">OCR factures fournisseurs · courriel · scan GED</span>
+          </div>
+        </div>
+        <div class="agent">
+          <span class="agent-bullet">B</span>
+          <div>
+            <strong>Catégorisation</strong>
+            <span class="agent-meta">Plan comptable QC · apprentissage historique cabinet</span>
+          </div>
+        </div>
+        <div class="agent">
+          <span class="agent-bullet">C</span>
+          <div>
+            <strong>Réconciliation</strong>
+            <span class="agent-meta">Multi-flux · écarts · auto-appariement 5 banques QC</span>
+          </div>
+        </div>
+        <div class="agent">
+          <span class="agent-bullet">D</span>
+          <div>
+            <strong>Production d'écritures</strong>
+            <span class="agent-meta">Suggestions pré-approuvées par votre CPA pilote</span>
+          </div>
+        </div>
+        <div class="agent">
+          <span class="agent-bullet">E</span>
+          <div>
+            <strong>Validation humaine</strong>
+            <span class="agent-meta">Circuit de revue · tagging auto · escalade intelligente</span>
+          </div>
+        </div>
+        <div class="agent">
+          <span class="agent-bullet">F</span>
+          <div>
+            <strong>Production de FS</strong>
+            <span class="agent-meta">États financiers QC · annexes · rapports MFQ</span>
+          </div>
+        </div>
+        <div class="agent">
+          <span class="agent-bullet">G</span>
+          <div>
+            <strong>Fiscalité</strong>
+            <span class="agent-meta">TPS/TVQ · DAS · acomptes provisionnels · préparatifs TP1</span>
+          </div>
+        </div>
+        <div class="agent">
+          <span class="agent-bullet">H</span>
+          <div>
+            <strong>Audit trail</strong>
+            <span class="agent-meta">Traçabilité Loi 25 art. 28-29 · export CAI-ready</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== POSITIONING (3 pillars) ====== -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Nos valeurs</span>
+        <h2>Sécurité, souveraineté numérique, transparence.</h2>
+        <p>Ce ne sont pas des fonctionnalités à cocher. Ce sont les principes qui ont guidé chaque décision d'architecture depuis le premier commit de <strong>compta_harness</strong>. On ne négocie pas dessus — même quand ça coûte plus cher, même quand ça prend plus de temps.</p>
+      </div>
+      <div class="pillar-grid">
+        <div class="pillar">
+          <div class="pillar-num">01 · Souveraineté numérique</div>
+          <h3>100% Québec, par construction.</h3>
+          <p>Code, données, inférence, équipe, contrats : tout est au Québec. Aucun appel sortant vers OpenAI, Anthropic ou tout autre fournisseur américain. <strong>Cloud Act éliminé par construction</strong> — pas par promesse, par architecture.</p>
+        </div>
+        <div class="pillar alt">
+          <div class="pillar-num">02 · Transparence</div>
+          <h3>Vous voyez tout. Tout le temps.</h3>
+          <p>GLM 5.2 auto-hébergé, poids du modèle sous votre toit. Chaque décision d'agent est journalisée avec contexte, raisonnement, output, revue humaine. Vous pouvez le démontrer à un inspecteur, à un client, à un Ordre professionnel — <strong>audit-ready par défaut</strong>.</p>
+        </div>
+        <div class="pillar alt2">
+          <div class="pillar-num">03 · Sécurité</div>
+          <h3>Le moindre octet est protégé.</h3>
+          <p>Chiffrement AES-256 au repos, TLS 1.3 en transit, authentification forte, RBAC granulaire. Aucun appel externe, aucune dépendance hors-Québec. <strong>Surface d'attaque minimale, surface de raisonnement maximale</strong> — la sécurité n'est pas une feature, c'est un plancher.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== COMPLIANCE ====== -->
+  <section id="hebergement" class="compliance">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" style="color: var(--accent);">Loi 25 · article par article</span>
+        <h2>Conforme dès le premier déploiement.</h2>
+        <p>La Loi 25 du Québec impose des obligations précises aux entreprises qui traitent des données personnelles par systèmes automatisés. comta_lm les couvre par construction.</p>
+      </div>
+      <div class="compliance-grid">
+        <div class="compliance-item">
+          <div class="key">Art. 9</div>
+          <h3>Aucun transfert hors-Québec</h3>
+          <p>Stockage, inférence et journalisation restent à Montréal. Zéro appel sortant US.</p>
+        </div>
+        <div class="compliance-item">
+          <div class="key">Art. 12.1</div>
+          <h3>Décision automatisée = transparence</h3>
+          <p>Chaque output agent est étiqueté et accompagné d'un mécanisme de revue humaine accessible.</p>
+        </div>
+        <div class="compliance-item">
+          <div class="key">Art. 3.2</div>
+          <h3>EFVP documenté</h3>
+          <p>Analyse d'impact vie privée préalable au déploiement, maintenue vivante à chaque évolution.</p>
+        </div>
+        <div class="compliance-item">
+          <div class="key">Art. 28-29</div>
+          <h3>Registre & responsables</h3>
+          <p>Registre des activités de traitement auto-rempli, responsable PII désigné, droit d'accès et d'effacement outillés.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TARIFS ====== -->
+  <section id="tarifs">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Tarifs envisagés</span>
+        <h2>Le prix couvre votre infra, pas l'inverse.</h2>
+        <p>comta_lm tourne sur H100 loués à Beauharnois, inférence GLM 5.2 ou Kimi K3, audit Loi 25 inclus, support humain en arrière-plan. Les tarifs ci-dessous sont nos estimations post-pilote ; ajustés après évaluation du périmètre (sources, volume, intégrations).</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Solo</div>
+          <div class="price-amt">1 800 <span class="per">/ mois</span></div>
+          <div class="price-sub">1 CPA · 50 transactions/jour · setup 6 000$</div>
+          <ul class="price-feats">
+            <li>Tous les agents actifs</li>
+            <li>1 cabinet · 1 utilisateur</li>
+            <li>Inférence GLM 5.2 partagée</li>
+            <li>Support courriel 24h</li>
+            <li>Hébergement QC inclus</li>
+            <li>EFVP Loi 25 prêt</li>
+          </ul>
+          <div class="price-cta">Démarrer</div>
+        </div>
+
+        <div class="price-card featured">
+          <div class="price-tier">Cabinet</div>
+          <div class="price-amt">4 500 <span class="per">/ mois</span></div>
+          <div class="price-sub">5-20 CPA · 200-500 trans/jour · setup 18 000$</div>
+          <ul class="price-feats">
+            <li>Tout le plan Solo</li>
+            <li>5-20 utilisateurs · RBAC</li>
+            <li>Intégrations Sage 50 / Acomba / QBO</li>
+            <li>H100 dédié · latence garantie</li>
+            <li>Support 24/7 · onboarding 4 semaines</li>
+            <li>Audit trail exportable</li>
+            <li>Personnalisation du plan comptable</li>
+            <li>Conformité Loi 25 art. 28-29 incluse</li>
+          </ul>
+          <div class="price-cta">Réserver une démo</div>
+        </div>
+
+        <div class="price-card">
+          <div class="price-tier">Firme</div>
+          <div class="price-amt">12 000 <span class="per">/ mois</span></div>
+          <div class="price-sub">20-100 CPA · 1000+ trans/jour · setup 35-60k$</div>
+          <ul class="price-feats">
+            <li>Tout le plan Cabinet</li>
+            <li>Cluster 2-4 H100 dédiés · isolation totale</li>
+            <li>On-prem possible · GPU colo Hydro-Québec</li>
+            <li>SLA 99.9% · account manager dédié</li>
+            <li>Intégrations ERP custom (Oracle, SAP)</li>
+            <li>Conformité Loi 25 + AIDA avancée</li>
+            <li>Équipe d'implémentation 8-12 semaines</li>
+            <li>Option Kimi K3 (raisonnement long) +800$/mois</li>
+          </ul>
+          <div class="price-cta">Nous contacter</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ ====== -->
+  <section id="faq" class="alt-bg">
+    <div class="container">
+      <div class="section-head" style="text-align:center; margin-left:auto; margin-right:auto;">
+        <span class="eyebrow">Questions fréquentes</span>
+        <h2>Ce qu'on nous demande le plus souvent.</h2>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary class="faq-q">Est-ce que vos agents remplacent un CPA ?</summary>
+          <p class="faq-a">Non. comta_lm est un outil d'aide à la décision au service du CPA. L'agent propose, le CPA dispose. Le jugement professionnel — analyse, signature, responsabilité déontologique — reste 100% du côté du cabinet. Notre produit est conforme au Code des professions du Québec par construction.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">Pourquoi ne pas simplement utiliser ChatGPT ?</summary>
+          <p class="faq-a">Trois raisons. (1) Cloud Act US : vos données PII comptable transitent par des serveurs américains assujettis au gouvernement fédéral. (2) Loi 25 art. 9 : tout sous-traitant hors-Québec exige un consentement spécifique. (3) Auditabilité : ChatGPT ne vous donne pas la trace du raisonnement, nous si.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">Comment fonctionne le « zéro fallback » ?</summary>
+          <p class="faq-a">Notre architecture est verrouillée : aucune de nos requêtes n'appelle d'API externe. LLM auto-hébergé (GLM 5.2), embeddings maison, stockage sur OVHcloud Beauharnois. C'est la seule façon d'éliminer Cloud Act par construction sans dépendre d'un DPA fragile.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">Combien de temps pour un pilote ?</summary>
+          <p class="faq-a">Pilote typique : 4 à 8 semaines. Semaine 1 : cartographie de votre cabinet + audit Loi 25 initial. Semaines 2-3 : déploiement des 4 agents prioritaires + revue humaine en boucle. Semaine 4+ : mesure ROI sur vos vrais dossiers.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">Mes données sont-elles réellement à Montréal ?</summary>
+          <p class="faq-a">Oui. Nous louons nos GPU chez OVHcloud Beauharnois (Québec), qui n'est pas assujetti au Cloud Act américain. Nous fournissons sur demande une attestation d'hébergement, le DPA signé et l'emplacement physique du serveur. Vous pouvez auditer.</p>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-q">Travaillez-vous avec des CPA membres de l'Ordre ?</summary>
+          <p class="faq-a">Oui — l'un de nos cofondateurs est CPA agréé. Tout notre produit est pensé et validé par des CPA en exercice. Nous entretenons des relations de transparence avec l'Ordre des CPA du Québec.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA / CONTACT ====== -->
+  <section id="contact">
+    <div class="container">
+      <div class="cta-box">
+        <h2>Un pilote de 4 semaines dans votre cabinet.</h2>
+        <p>Réservez une démo de 30 minutes. On regarde vos vrais dossiers, on identifie les 3 processus qui automatisent le plus, on vous donne le ROI avant de signer quoi que ce soit.</p>
+        <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+          <a href="mailto:hello@comta-lm.ca" class="btn btn-primary">Écrire à hello@comta-lm.ca</a>
+          <a href="#" class="btn btn-ghost">Calendrier de démo (à venir)</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a href="#" class="logo" style="border:none;">
+            <span class="logo-dot"></span>
+            comta_lm
+          </a>
+          <p>Orchestration d'agents IA open-source pour cabinets comptables et PME. 100% Montréal, conforme Loi 25.</p>
+        </div>
+        <div class="foot-col">
+          <h4>Produit</h4>
+          <ul>
+            <li><a href="#produit">Positionnement</a></li>
+            <li><a href="#agents">Agents IA</a></li>
+            <li><a href="#hebergement">Loi 25</a></li>
+            <li><a href="#tarifs">Tarifs</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Approche</h4>
+          <ul>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Démo</a></li>
+            <li><a href="#contact">Pilote</a></li>
+            <li><a href="#contact">Partenariat cabinet</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h4>Légal</h4>
+          <ul>
+            <li><a href="#contact">Confidentialité</a></li>
+            <li><a href="#contact">Conditions</a></li>
+            <li><a href="#contact">Responsabilité PII</a></li>
+            <li><a href="#contact">Nous joindre</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 comta_lm · Montréal, Québec · Auto-hébergé GLM 5.2 sur OVHcloud Beauharnois</span>
+        <span style="font-family:'JetBrains Mono',ui-monospace,monospace;">v0.1.0 · pre-pilote</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
