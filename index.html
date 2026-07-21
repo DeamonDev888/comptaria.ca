@@ -697,6 +697,81 @@
       .harness-grid { grid-template-columns: repeat(2, 1fr); }
       .harness-foot { flex-direction: column; gap: 0.5rem; }
     }
+
+    /* ============ BT SECRETARY MOBILE ============ */
+    .bt-secretary {
+      background: linear-gradient(135deg, #f7f9fc 0%, #e6f2f4 100%);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .bt-secretary-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .bt-secretary-copy h2 { color: var(--ink); margin-bottom: 0.75rem; }
+    .bt-secretary-copy p { color: var(--ink-3); max-width: 540px; }
+    .bt-secretary-points {
+      list-style: none;
+      padding: 0;
+      margin: 1.25rem 0 1.5rem;
+    }
+    .bt-secretary-points li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.4rem 0;
+      color: var(--ink-2);
+      font-size: 0.95rem;
+    }
+    .bt-secretary-points li span {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      flex-shrink: 0;
+      font-size: 0.95rem;
+    }
+    .bt-secretary-cta {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .bt-secretary-cta .btn-primary {
+      cursor: default;
+      background: var(--ink);
+      color: #fff;
+      padding: 0.7rem 1.15rem;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .bt-secretary-note {
+      font-size: 0.85rem;
+      color: var(--ink-3);
+    }
+    .bt-secretary-visual {
+      display: flex;
+      justify-content: center;
+    }
+    .bt-secretary-visual img {
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 12px 28px rgba(11,37,69,0.12));
+    }
+    @media (max-width: 880px) {
+      .bt-secretary-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .bt-secretary-visual { order: -1; }
+    }
     @media (max-width: 540px) {
       .harness-grid { grid-template-columns: 1fr; }
       .harness-wrap { padding: 2rem 1.5rem; }
@@ -989,6 +1064,35 @@
             <strong>Audit trail</strong>
             <span class="agent-meta">Traçabilité Loi 25 art. 28-29 · export CAI-ready</span>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== BT SECRETARY — MOBILE APP ====== -->
+  <section id="bt-secretary" class="bt-secretary">
+    <div class="container">
+      <div class="bt-secretary-grid">
+        <div class="bt-secretary-copy">
+          <span class="eyebrow">Application mobile · BT Secretary</span>
+          <h2>Vos heures et vos feuilles de temps, du terrain au cabinet.</h2>
+          <p>
+            BT Secretary est l’application mobile québécoise de Comptaria. Saisie d’heures, bon de travail, photo de feuille papier, validation par la secrétaire ou le PDG, puis export vers la paie et la comptabilité. L’application fonctionne hors ligne et reste hébergée au Québec.
+          </p>
+          <ul class="bt-secretary-points">
+            <li><span>📝</span> Feuilles de temps personnalisables par client</li>
+            <li><span>📷</span> Capture papier avec OCR et correction humaine</li>
+            <li><span>✅</span> Approbation par la secrétaire ou le PDG</li>
+            <li><span>🔌</span> Export vers Acomba et, à terme, vers notre propre paie</li>
+            <li><span>🛡️</span> Données hébergées au Québec, conformes Loi 25</li>
+          </ul>
+          <div class="bt-secretary-cta">
+            <span class="btn btn-primary">Bientôt sur iOS et Android</span>
+            <span class="bt-secretary-note">Programme pilote en préparation</span>
+          </div>
+        </div>
+        <div class="bt-secretary-visual">
+          <img src="assets/bt-secretary-mobile.svg" alt="Aperçu de l'application mobile BT Secretary" width="360" height="420" loading="lazy" />
         </div>
       </div>
     </div>
