@@ -1,0 +1,39 @@
+## BT Secretary app
+Scaffolding mobile Phase 1 (Capacitor + iOS + Android).
+
+### Status (Phase 1.0)
+
+- App Capacitor scaffolded
+- App ID: `ca.comptaria.btsecretary`
+- WebDir: `../public` (wrapper HTML of the Comptaria marketing site, will be replaced by the BT Secretary app shell at M1.1)
+- Platforms: android/ ios/
+
+### Run locally
+
+```bash
+cd /var/www/comptaria.ca/mobile
+npm install
+# Build the web bundle first (see ../package.json "build" script) — for now, npx cap sync copies ../public
+npx cap sync android    # copies web assets and updates plugins
+npx cap sync ios
+npx cap open android    # opens Android Studio
+npx cap open ios        # opens Xcode (on macOS)
+```
+
+### Architecture (Phase 1 spec)
+
+- App container: Capacitor (iOS + Android)
+- Web shell: HTML+JS from `../public` (will be replaced by `app.btsecretary.html`)
+- Native plugins: `@capacitor/camera, filesystem, network, preferences, share` (already installed)
+- Backend MCP (separate): `mcp-comtaria` (DB) + `mcp-csv` v0.2 (brand + structured + visual) + `mcp-acomba` (wrapper)
+- Auth: OIDC cabinet-level, MFA
+- Offline mode: queue persistante (IndexedDB + Service Worker)
+
+### Roadmap
+
+See `docs/strategy/10-bt-secretary-app-v0.1-roadmap.md` in the
+`comptaria.ca` repository for the full Partie 1 plan.
+
+This directory is part of the same monorepo (`comptaria.ca`). It will be
+contributed to via PRs on `feat/app-bt-secretary-v0` once the web shell
+exists.
