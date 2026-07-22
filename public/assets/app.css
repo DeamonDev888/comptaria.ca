@@ -1,0 +1,118 @@
+:root {
+  --ink: #0b2545;
+  --ink-2: #1f3a5f;
+  --ink-3: #5a6a82;
+  --line: #e3e9f2;
+  --line-soft: #eef2f8;
+  --bg: #ffffff;
+  --bg-soft: #f7f9fc;
+  --bg-card: #ffffff;
+  --accent: #1f7a8c;
+  --accent-2: #bf4342;
+  --warn: #d4a017;
+  --ok: #2e8b57;
+  --radius: 12px;
+  --shadow-1: 0 1px 2px rgba(11,37,69,0.04), 0 1px 3px rgba(11,37,69,0.06);
+  --shadow-2: 0 4px 10px rgba(11,37,69,0.08);
+  --pad: clamp(12px, 3vw, 22px);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg-soft); color: var(--ink); font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.45; }
+body { padding-bottom: 80px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header / tabs */
+.app-header {
+  position: sticky; top: 0; z-index: 10;
+  background: #fff; border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+  gap: 12px; padding: 10px var(--pad);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-name { font-weight: 700; font-size: 15px; letter-spacing: 0.01em; }
+.brand-sub { font-size: 11px; color: var(--ink-3); }
+.nav { display: flex; gap: 4px; overflow-x: auto; }
+.nav button {
+  background: transparent; color: var(--ink-2); border: none; border-radius: 8px;
+  padding: 8px 10px; font: inherit; font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.nav button.active { background: var(--bg-soft); color: var(--ink); }
+.nav button:hover { background: var(--bg-soft); }
+
+.sync { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot-ok { background: var(--ok); }
+.dot-warn { background: var(--warn); }
+.dot-err { background: var(--accent-2); }
+
+/* Layout */
+main { padding: var(--pad); max-width: 720px; margin: 0 auto; }
+.view { display: none; background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 18px; box-shadow: var(--shadow-1); }
+.view.active { display: block; }
+h2 { margin: 0 0 4px; font-size: 20px; }
+.lead { margin: 0 0 16px; color: var(--ink-3); font-size: 13px; }
+
+.muted { color: var(--ink-3); font-size: 13px; }
+.cta { display: flex; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+
+/* Forms */
+.form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form .full { grid-column: 1 / -1; }
+.form label { display: flex; flex-direction: column; font-size: 12px; color: var(--ink-2); gap: 4px; font-weight: 600; }
+.form input, .form select, .form textarea {
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px;
+  font: inherit; background: #fff; color: var(--ink);
+}
+.form input:focus, .form select:focus, .form textarea:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+
+button.primary, button.ghost {
+  border: none; border-radius: 10px; padding: 10px 16px; font: inherit; font-weight: 700; cursor: pointer;
+}
+button.primary { background: var(--ink); color: #fff; }
+button.primary:hover { background: var(--ink-2); }
+button.ghost { background: var(--bg-soft); color: var(--ink-2); border: 1px solid var(--line); }
+button.ghost:hover { background: var(--line-soft); }
+
+/* Week grid (timesheet) */
+.week { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 16px 0; }
+.day { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.day header { display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.day header small { color: var(--ink-3); font-weight: 500; font-size: 12px; }
+.day .row { display: grid; grid-template-columns: 1fr 56px 56px; gap: 8px; align-items: center; }
+.day input[type=number] { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; text-align: center; }
+
+/* Tables (bon de travail) */
+table.lines { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px; }
+table.lines th, table.lines td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
+table.lines th { background: var(--bg-soft); text-align: left; }
+table.lines td.r, table.lines th.r { text-align: right; }
+table.lines input { width: 100%; border: 1px solid var(--line); border-radius: 6px; padding: 6px; font: inherit; }
+table.lines tfoot td { border-top: 2px solid var(--ink); border-bottom: none; font-weight: 700; }
+
+/* Output box (HTML preview) */
+.out { margin-top: 16px; border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 14px; max-height: 60vh; overflow: auto; }
+
+/* Bill photo */
+.bill-grid { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 12px; }
+@media (min-width: 640px) { .bill-grid { grid-template-columns: 1fr 1fr; } }
+.cam { display: block; border: 2px dashed var(--line); border-radius: 12px; padding: 28px; text-align: center; cursor: pointer; background: var(--bg-soft); color: var(--ink-3); }
+.cam:hover { border-color: var(--accent); color: var(--accent); }
+.cam-cta { font-weight: 700; font-size: 15px; }
+.preview { margin-top: 10px; text-align: center; }
+.preview img { max-width: 100%; max-height: 240px; border-radius: 10px; box-shadow: var(--shadow-1); }
+.preview span { display: block; color: var(--ink-3); font-size: 12px; }
+
+/* KV list */
+.kv { list-style: none; padding: 0; margin: 12px 0; font-size: 14px; }
+.kv li { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.kv li:last-child { border-bottom: none; }
+
+/* Dev details */
+.dev { margin-top: 16px; border: 1px dashed var(--line); border-radius: 8px; padding: 8px 12px; background: var(--bg-soft); font-size: 12px; color: var(--ink-3); }
+.dev summary { cursor: pointer; font-weight: 700; color: var(--ink-2); }
+.dev p { margin: 8px 0; }
+
+/* Footer */
+.app-foot { text-align: center; padding: 20px var(--pad); font-size: 12px; color: var(--ink-3); }

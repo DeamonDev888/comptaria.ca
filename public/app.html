@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0" />
+  <meta name="theme-color" content="#0b2545" />
+  <title>BT Secretary — app terrain (Comptaria)</title>
+  <meta name="description" content="BT Secretary — saisie temps, bons de travail et factures photo sur chantier. Wrapper HTML5 de la plateforme Comptaria (Capacitor). L'agent fait 80% du travail, l'humain signe le 20% qui compte." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b2545'/%3E%3Ctext x='32' y='42' font-family='ui-monospace,monospace' font-size='32' font-weight='700' fill='%23ffffff' text-anchor='middle'%3Ecl%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/assets/app.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" width="40" height="40" aria-hidden="true">
+        <rect width="64" height="64" rx="12" fill="#0b2545" />
+        <text x="32" y="42" font-family="ui-monospace,monospace" font-size="32" font-weight="700" fill="#ffffff" text-anchor="middle">c</text>
+      </svg>
+      <div>
+        <div class="brand-name">BT Secretary</div>
+        <div class="brand-sub">par Comptaria · Québec · Loi 25</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button data-tab="time" class="active" type="button">⏱ Temps</button>
+      <button data-tab="work" type="button">🛠 Bon trav.</button>
+      <button data-tab="bill" type="button">📷 Facture</button>
+      <button data-tab="me" type="button">👤 Moi</button>
+    </nav>
+    <div class="sync" id="sync-state">
+      <span class="dot dot-ok" id="dot"></span>
+      <span id="sync-label">En ligne</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Onglet Temps -->
+    <section data-view="time" class="view active">
+      <h2>Feuille de temps — <span id="ts-week">semaine en cours</span></h2>
+      <p class="lead">Pointage rapide, mode dégradé, envoi à la secrétaire automatique.</p>
+
+      <div id="timeweek" class="week"></div>
+
+      <div class="cta">
+        <button id="ts-sync" class="primary" type="button">Envoyer la feuille</button>
+        <span class="muted" id="ts-msg"></span>
+      </div>
+
+      <details class="dev">
+        <summary>Comment ça marche (rappel)</summary>
+        <p>Tu tapes tes heures, la feuille est sauvegardée localement et synchronisée à la prochaine connexion. La secrétaire reçoit une <strong>pièce HTML brandée</strong> par e‑mail + un <strong>CSV structuré</strong> dans son inbox pour la paie (TPS/TVQ calculées).</p>
+      </details>
+    </section>
+
+    <!-- Onglet Bon de travail -->
+    <section data-view="work" class="view">
+      <h2>Bon de travail chantier</h2>
+      <p class="lead">Heures, taux, total — points par projet/tâche.</p>
+
+      <form id="bt-form" class="form">
+        <label>Numéro<input name="numero" type="text" placeholder="BT-2026-…" required /></label>
+        <label>Date<input name="date" type="date" required /></label>
+        <label>Client
+          <select name="client" required>
+            <option value="">…</option>
+            <option value="Construction Rive-Nord">Construction Rive-Nord</option>
+            <option value="Bon-Air">Bon-Air</option>
+            <option value="Air Liquide">Air Liquide</option>
+          </select>
+        </label>
+        <label>Projet<input name="projet" type="text" placeholder="Rénovation fondation" required /></label>
+        <label>Tâche<input name="tache" type="text" placeholder="Excavation / Coulée" /></label>
+        <label>Période<input name="periode" type="text" placeholder="2026-07-13 → 2026-07-21" /></label>
+        <label>Statut
+          <select name="statut"><option>En cours</option><option>Soumis</option><option>Approuvé</option></select>
+        </label>
+        <label class="full">Notes<textarea name="notes" rows="2" placeholder="Semaine 13-21 juillet."></textarea></label>
+
+        <h3>Lignes</h3>
+        <table class="lines">
+          <thead><tr><th>Date</th><th>Description</th><th class="r">Heures</th><th class="r">Taux ($)</th><th class="r">Total ($)</th><th></th></tr></thead>
+          <tbody id="bt-lines"></tbody>
+          <tfoot><tr><td colspan="2"><button id="bt-add" type="button" class="ghost">+ Ligne</button></td><td class="r" id="bt-tot-heure">0</td><td></td><td class="r" id="bt-tot-cents">0,00</td><td></td></tr></tfoot>
+        </table>
+
+        <div class="cta">
+          <button class="primary" type="submit">Générer la pièce (HTML)</button>
+          <button id="bt-csv" type="button" class="ghost">CSV multi-sections</button>
+        </div>
+      </form>
+
+      <div id="bt-out" class="out"></div>
+    </section>
+
+    <!-- Onglet Facture -->
+    <section data-view="bill" class="view">
+      <h2>Capture facture (photo + OCR LLM)</h2>
+      <p class="lead">Tu prends la photo, l'agent LLM extrait les champs. Tu valides en 5 taps.</p>
+
+      <div class="bill-grid">
+        <div class="bill-photo">
+          <label class="cam">
+            <input id="bill-cam" type="file" accept="image/*" capture="environment" hidden />
+            <span class="cam-cta">📷 Prendre / choisir la photo</span>
+          </label>
+          <div id="bill-preview" class="preview"></div>
+        </div>
+        <form id="bill-form" class="form">
+          <label class="full">Fournisseur<input name="fournisseur" type="text" placeholder="Construction Rive-Nord" required /></label>
+          <label>Date<input name="date" type="date" required /></label>
+          <label>N° facture<input name="numero" type="text" placeholder="FA-…" required /></label>
+          <label>Sous-total ($)<input name="sous_total" type="number" step="0.01" required /></label>
+          <label>Catégorie
+            <select name="cat">
+              <option>Matériaux</option><option>Sous-traitance</option><option>Équipement</option>
+              <option>Location machinerie</option><option>Services</option><option>Autre</option>
+            </select>
+          </label>
+          <label class="full">Notes<textarea name="notes" rows="2" placeholder="Commande chantier Bon-Air, livraison 2026-07-22."></textarea></label>
+
+          <div class="cta">
+            <button id="bill-send" class="primary" type="submit">Envoyer (cabinet)</button>
+            <span class="muted" id="bill-msg"></span>
+          </div>
+        </form>
+      </div>
+
+      <details class="dev">
+        <summary>Pipeline OCR</summary>
+        <p>Photo → fichier immuable + hash → LLM Qwen-VL/Mistral Pixtral → extraction structurée → champ obligatoire à valider humainement si score < seuil → CSV → <code>csv_db_import</code> → <strong>pièce HTML brandée</strong> pour la comptabilité → ré‑examen CPA avant export Acomba.</p>
+      </details>
+    </section>
+
+    <!-- Onglet Moi -->
+    <section data-view="me" class="view">
+      <h2>Mon compte</h2>
+      <p class="lead">Employé (démo) · Bon-Air Construction inc. · Pilote interne.</p>
+
+      <ul class="kv">
+        <li><strong>Cabinet:</strong> Comptaria inc. (Québec)</li>
+        <li><strong>Patron:</strong> Bon-Air Construction inc. (Lac‑Bouchette, QC)</li>
+        <li><strong>Identifiant:</strong> <code>emp1</code></li>
+        <li><strong>Solde:</strong> 14 congés restants · 0 maladie</li>
+      </ul>
+
+      <details class="dev">
+        <summary>Hébergement, conservation, audit (Loi 25)</summary>
+        <p>Toutes les données sont stockées au Québec (OVHcloud Montréal) et chiffrées. Les photos originales sont conservées 30 jours, les dérivées normalisées 7 ans. Chaque écriture est journalisée (audit append‑only). L'export à la caisse ne se fait jamais sans validation CPA finale.</p>
+      </details>
+
+      <details class="dev">
+        <summary>Statut des agents IA (à cadrer — chatbot à déterminer)</summary>
+        <p>Pour l'instant, l'app pré‑remplit 80 % via heuristiques locales. Un chatbot interne est envisagé en Phase 2.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="app-foot">
+    <span>Comptaria · Loi 25 · Québec · 2026</span>
+    <a href="/">Site public</a> · <a href="/loi-25.html">Loi 25</a>
+  </footer>
+
+  <script src="/assets/app.js"></script>
+</body>
+</html>
