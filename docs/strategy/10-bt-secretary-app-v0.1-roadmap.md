@@ -2,6 +2,19 @@
 
 > Application terrain · chantier + bureau · iOS + Android · intelligente · à terme autonome
 > Date : 2026-07-22 (post-validation `mcp-csv` v0.2)
+
+## 0. Statut (2026-07-22 v0.2)
+
+- [x] **Phase 0 Fondations** (juillet 2026) — mcp-comtaria v0.1, mcp-csv v0.2, mcp-acomba v0.1, PR #1 et #2 mergées sur main.
+- [x] **M1.0 App socle (juillet 2026)** — scaffold BT Secretary livré : Capacitor iOS+Android configuré (`ca.comptaria.btsecretary`), shell HTML/CSS/JS (`/public/app.html` à `/public/assets/app.*`), 4 onglets (Temps · Bon trav. · Facture photo · Moi), brand Bon-Air inliné, génération CSV multi-sections + HTML print-ready côté client, smoke Playwright OK (TS: 7 jours, BT: 5 lignes totaux 2 090,00 $, CSV 700 octets), PR #3 mergée sur `comptaria.ca:main`.
+- [ ] **M1.1** (sept 2026) — saisie temps + bon câblage backend `mcp-comtaria`.
+- [ ] **M1.2** (oct 2026) — OCR photo **PaddleOCR 2.7+** CPU local (Apache 2.0, 100 % QC ; décision Loi 25 du 2026-07-22).
+- [ ] **M1.3** (oct 2026) — dispatcher central multi-format.
+- [ ] **Matrice paie v0.1 livrée** — `comptaria.ca/docs/strategy/11-paye-destinataires-v0.1.md` (PR #4). En attente de validation Magus avant tout câblage Phase 3.
+
+— *Phase 1 = on y est. Phase 2 = non commencé.*
+
+
 > Statut : **roadmap acceptée** — premier livrable cible Q4 2026
 > Dépendances : `mcp-comtaria` (livré), `mcp-csv` v0.2 (livré), `mcp-acomba` v0.1 (livré)
 
@@ -44,7 +57,7 @@ L’app fait **80 % du travail**, l’être humain signe ce qui compte. À terme
 ### 3.2 Capture photo des factures
 - **Prise photo** (caméra native ou HTML web wrapper via Capacitor).
 - **Recadrage automatique** (perspective, contraste).
-- **OCR** via LLM (Qwen-VL, Mistral Pixtral, GPT-4V) avec :
+- **OCR** via **PaddleOCR 2.7+** (lib CPU locale, Apache 2.0 — **aucun LLM cloud**, décision Loi 25 du 2026-07-22) avec :
   - Score de confiance par champ.
   - **Validation humaine obligatoire** sur les champs à score < seuil.
   - Conservation image originale (immuable) + version normalisée + diff.
@@ -90,7 +103,7 @@ L’app fait **80 % du travail**, l’être humain signe ce qui compte. À terme
 │  Edge API (Node + Hono/Fastify)                │
 │  - auth (cabinets employés, MFA)                │
 │  - dispatch (routing vers bons destinataires)  │
-│  - envelope LLM (Qwen-VL, Mistral Pixtral)     │
+│  - envelope OCR **PaddleOCR CPU** (pas de LLM cloud)  │
 │  - audit append-only Loi 25                     │
 └──────────────────┬─────────────────────────────┘
                    │
@@ -134,7 +147,7 @@ Matrice minimale pour la v0.1 :
 - **App mobile** : **Capacitor** (wrapper HTML → APK + IPA). Permet d’éviter 100 % natif, garde un seul codebase Web.
 - **Stack frontend** : TypeScript + Vite + composants existants (HTML brandé).
 - **Edge API** : Node 22 + Hono + Postgres + pgvector (déjà chez Comptaria).
-- **LLM** : Qwen-VL local + Mistral Pixtral pour OCR photo et suggestions.
+- **OCR** : **PaddleOCR 2.7+** CPU local (Apache 2.0, modèles `french_ppocr-onnx` ; 100 % QC).
 - **Stockage photo** : S3-compatible (OVHcloud Storage) + chiffrement côté serveur.
 
 ---
@@ -163,7 +176,7 @@ Matrice minimale pour la v0.1 :
 - [ ] App Capacitor scaffold (iOS + Android cibles test)
 - [ ] **Saisie feuille de temps** offline + sync
 - [ ] **Saisie bon de travail** + templates client
-- [ ] **OCR photo** des factures (Qwen-VL local)
+- [ ] **OCR photo** des factures (**PaddleOCR 2.7+ CPU local**, Apache 2.0 ; 100 % QC, pas de LLM cloud — décision Loi 25 du 2026-07-22)
 - [ ] **Validation humaine** sur tous champs < seuil
 - [ ] **Dispatching central** (matrice v0.1)
 - [ ] **Pièces HTML brandé** (CSV → HTML via `csv_render_visual`)
@@ -195,15 +208,15 @@ Matrice minimale pour la v0.1 :
 
 ## 7. Jalons de la Partie 1
 
-| Jalon | Date cible | Sortie / critère |
-|---|---|---|
-| **M1.0** App terrain socle | sept 2026 | Capacitor scaffold + écrans vides |
-| **M1.1** Saisie temps + bon | sept 2026 | employé chantier pointe + synchronise hors-ligne |
-| **M1.2** OCR photo + dispatch | oct 2026 | photo facture → CSV valide → bonne boîte, bon format |
-| **M1.3** HTML brandé | oct 2026 | pièces de rechange ouvrables en navigateur par le chargé de projet |
-| **M1.4** Pilote 5 employés | nov 2026 | vraies feuilles de 5 employés Air Liquide |
-| **M1.5** Production cabinet interne | déc 2026 | 1 cabinet comptable Onboardé |
-| **M2.0** Chatbot (post-Partie 1) | Q1 2027 | interaction conversationnelle minimale |
+| Jalon | Statut | Date cible | Sortie / critère |
+|---|---|---|---|
+| **M1.0** App terrain socle | ✅ livré (2026-07-22) | juillet 2026 | Capacitor scaffold + shell 4 onglets + smoke Playwright OK |
+| **M1.1** Saisie temps + bon + sync backend | ⏳ à faire | sept 2026 | employé chantier pointe + synchronise via mcp-comtaria |
+| **M1.2** OCR photo + dispatch | ⏳ à faire | oct 2026 | photo facture → CSV valide → bonne boîte, bon format (**PaddleOCR 2.7+**, lib CPU Loi 25 first) |
+| **M1.3** HTML brandé serveur | ⏳ à faire | oct 2026 | pièces générées côté serveur par mcp-csv v0.2 |
+| **M1.4** Pilote 5 employés | ⏳ à faire | nov 2026 | vraies feuilles de 5 employés Air Liquide |
+| **M1.5** Production cabinet interne | ⏳ à faire | déc 2026 | 1 cabinet comptable onboardé |
+| **M2.0** Chatbot (post-Partie 1) | ⏳ à faire | Q1 2027 | interaction conversationnelle minimale |
 
 ---
 
@@ -216,7 +229,7 @@ Matrice minimale pour la v0.1 :
 | Push Apple TestFlight complexe | faible | preflight Apple Developer Program startup, canaux progressifs |
 | Photos PII hors Québec (cloud US accidental) | moyen | scanner config cloud + journalisation localisation photo |
 | Adoption employé terrain (résistance au tech) | moyen | UX minimal + bouton unique « pointer » + formation 30 min |
-| Coût LLM VPS (Qwen-VL + Mistral) | moyen | pré-étude coûts, image disk caching, batching |
+| Coût VPS CPU pour PaddleOCR (chiffrement, RAM modèle) | faible | benchmark avant M1.2, modèles sur CPU pas cher |
 
 ---
 
