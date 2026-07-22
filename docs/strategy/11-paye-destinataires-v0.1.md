@@ -197,4 +197,12 @@ Pour chaque pièce (ci-dessus) :
 - Validation finale signée par Magus.
 - Intégration dans `mcp-csv` v0.3 (templating XML + dispatcher central).
 
+
+
+### 2.11 OCR photo facture (décision Loi 25)
+
+- **Décision par défaut** : **lib CPU locale** uniquement (Tesseract 5, PaddleOCR ou EasyOCR — toutes Apache 2.0, modèles hébergeables sur infra QC).
+- **Interdit** : Qwen-VL, Mistral Pixtral, GLM 5.2, GPT-4V, AWS Textract, Google Vision, Azure Cognitive Services — sous-traitant hors QC implicite, hors scope Loi 25 first.
+- **Pipeline** : (1) photo → (2) OCR CPU → (3) score de confiance par champ → (4) `<OCR_HUMAN_REQUIRED>` si score < seuil → (5) validation humaine obligatoire → (6) CSV structuré → (7) HTML brandé mcp-csv → (8) cabinet en diff.
+- **Cas d'usage** : Bon-Air chantier, photos factures matériaux/sous-traitance. Volume cible Phase 1 : 50-200 photos / mois.
 — *Striker (bot dev/ops) — 2026-07-22*
