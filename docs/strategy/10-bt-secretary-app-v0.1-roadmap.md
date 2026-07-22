@@ -2,6 +2,19 @@
 
 > Application terrain · chantier + bureau · iOS + Android · intelligente · à terme autonome
 > Date : 2026-07-22 (post-validation `mcp-csv` v0.2)
+
+## 0. Statut (2026-07-22 v0.2)
+
+- [x] **Phase 0 Fondations** (juillet 2026) — mcp-comtaria v0.1, mcp-csv v0.2, mcp-acomba v0.1, PR #1 et #2 mergées sur main.
+- [x] **M1.0 App socle (juillet 2026)** — scaffold BT Secretary livré : Capacitor iOS+Android configuré (`ca.comptaria.btsecretary`), shell HTML/CSS/JS (`/public/app.html` à `/public/assets/app.*`), 4 onglets (Temps · Bon trav. · Facture photo · Moi), brand Bon-Air inliné, génération CSV multi-sections + HTML print-ready côté client, smoke Playwright OK (TS: 7 jours, BT: 5 lignes totaux 2 090,00 $, CSV 700 octets), PR #3 mergée sur `comptaria.ca:main`.
+- [ ] **M1.1** (sept 2026) — saisie temps + bon câblage backend `mcp-comtaria`.
+- [ ] **M1.2** (oct 2026) — OCR photo LLM (Qwen-VL local).
+- [ ] **M1.3** (oct 2026) — dispatcher central multi-format.
+- [ ] **Matrice paie v0.1 livrée** — `comptaria.ca/docs/strategy/11-paye-destinataires-v0.1.md` (PR #4). En attente de validation Magus avant tout câblage Phase 3.
+
+— *Phase 1 = on y est. Phase 2 = non commencé.*
+
+
 > Statut : **roadmap acceptée** — premier livrable cible Q4 2026
 > Dépendances : `mcp-comtaria` (livré), `mcp-csv` v0.2 (livré), `mcp-acomba` v0.1 (livré)
 
@@ -195,15 +208,15 @@ Matrice minimale pour la v0.1 :
 
 ## 7. Jalons de la Partie 1
 
-| Jalon | Date cible | Sortie / critère |
-|---|---|---|
-| **M1.0** App terrain socle | sept 2026 | Capacitor scaffold + écrans vides |
-| **M1.1** Saisie temps + bon | sept 2026 | employé chantier pointe + synchronise hors-ligne |
-| **M1.2** OCR photo + dispatch | oct 2026 | photo facture → CSV valide → bonne boîte, bon format |
-| **M1.3** HTML brandé | oct 2026 | pièces de rechange ouvrables en navigateur par le chargé de projet |
-| **M1.4** Pilote 5 employés | nov 2026 | vraies feuilles de 5 employés Air Liquide |
-| **M1.5** Production cabinet interne | déc 2026 | 1 cabinet comptable Onboardé |
-| **M2.0** Chatbot (post-Partie 1) | Q1 2027 | interaction conversationnelle minimale |
+| Jalon | Statut | Date cible | Sortie / critère |
+|---|---|---|---|
+| **M1.0** App terrain socle | ✅ livré (2026-07-22) | juillet 2026 | Capacitor scaffold + shell 4 onglets + smoke Playwright OK |
+| **M1.1** Saisie temps + bon + sync backend | ⏳ à faire | sept 2026 | employé chantier pointe + synchronise via mcp-comtaria |
+| **M1.2** OCR photo + dispatch | ⏳ à faire | oct 2026 | photo facture → CSV valide → bonne boîte, bon format |
+| **M1.3** HTML brandé serveur | ⏳ à faire | oct 2026 | pièces générées côté serveur par mcp-csv v0.2 |
+| **M1.4** Pilote 5 employés | ⏳ à faire | nov 2026 | vraies feuilles de 5 employés Air Liquide |
+| **M1.5** Production cabinet interne | ⏳ à faire | déc 2026 | 1 cabinet comptable onboardé |
+| **M2.0** Chatbot (post-Partie 1) | ⏳ à faire | Q1 2027 | interaction conversationnelle minimale |
 
 ---
 
